@@ -1,44 +1,42 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_db
+  database:
+    image: postgres:latest
+    container_name: just-real-estate-db
     restart: always
     environment:
-      POSTGRES_USER: chad
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: realestate
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: just_real_estate
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
   backend:
-    build:
-      context: ./backend
-    container_name: realestate_backend
+    image: chadeeboo/backend:latest
+    container_name: just-real-estate-backend
     restart: always
     depends_on:
-      - postgres
+      - database
     environment:
-      DB_HOST: postgres
-      DB_USER: chad
-      DB_PASSWORD: mypassword
-      DB_NAME: realestate
-      DB_PORT: 5432
+      DB_HOST: database
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: just_real_estate
+      PORT: 5000
     ports:
       - "5000:5000"
 
   frontend:
-    build:
-      context: ./frontend
-    container_name: realestate_frontend
+    image: chadeeboo/frontend:latest
+    container_name: just-real-estate-frontend
     restart: always
     depends_on:
       - backend
     ports:
-      - "80:80"
+      - "3000:3000"
 
 volumes:
-  pgdata:
+  postgres_data:
