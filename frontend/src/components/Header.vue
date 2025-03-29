@@ -11,7 +11,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <header class="bg-white shadow-md py-4">
+  <header class="bg-white shadow-md py-4 sticky z-1">
     <div class="container mx-auto flex justify-between items-center px-4">
       <h1 class="text-2xl font-bold text-gray-800">RealEstate</h1>
 
