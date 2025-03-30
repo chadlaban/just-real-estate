@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
+import debounce from "lodash/debounce";
 import Pagination from "@/components/Pagination.vue";
 import staticImg from "@/assets/images/listing/static-img.jpg";
 
@@ -9,26 +10,44 @@ const currentPage = ref(1);
 const totalPages = ref(1);
 const searchQuery = ref("");
 const limit = 10;
+let abortController = null;
 
 const fetchProperties = async (page = 1) => {
+  if (abortController) abortController.abort();
+
+  abortController = new AbortController();
+  const signal = abortController.signal;
+
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_URL + import.meta.env.VITE_PORT}/api/properties`,
       {
         params: { page, limit, search: searchQuery.value.trim() },
+        signal,
       }
     );
+
     properties.value = response.data.data;
     totalPages.value = response.data.totalPages;
     currentPage.value = response.data.currentPage;
   } catch (error) {
-    console.error("Error fetching properties:", error);
+    if (axios.isCancel(error)) {
+      console.log("Request canceled:", error.message);
+    } else {
+      console.error("Error fetching properties:", error);
+    }
   }
 };
 
-onMounted(() => fetchProperties());
+const debouncedFetch = debounce((value) => {
+  fetchProperties(1, value); // page reset when searching
+}, 500);
 
-watch(searchQuery, () => fetchProperties(1)); // page reset when searching
+watch(searchQuery, (newValue) => {
+  debouncedFetch(newValue);
+});
+
+onMounted(() => fetchProperties());
 </script>
 
 <template>
@@ -44,14 +63,7 @@ watch(searchQuery, () => fetchProperties(1)); // page reset when searching
         type="text"
         placeholder="Search by address..."
         class="border p-2 rounded w-full max-w-md"
-        @keyup.enter="fetchProperties(1)"
       />
-      <button
-        @click="fetchProperties(1)"
-        class="bg-gray-500 text-white px-4 py-2 rounded"
-      >
-        🔍
-      </button>
     </div>
 
     <!-- Properties -->
