@@ -68,28 +68,41 @@ const importProperties = async (req, res) => {
 
 const getProperties = async (req, res) => {
   try {
-    const { page, limit, search = "" } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      sort_by,
+      order = "ASC",
+    } = req.query;
     const offset = (page - 1) * limit;
 
-    const whereClause = search
-      ? {
-          [Op.or]: [
-            { formatted_address: { [Op.iLike]: `%${search}%` } },
-            { address_line1: { [Op.iLike]: `%${search}%` } },
-            { address_line2: { [Op.iLike]: `%${search}%` } },
-            { property_type: { [Op.iLike]: `%${search}%` } },
-            { city: { [Op.iLike]: `%${search}%` } },
-            { legal_description: { [Op.iLike]: `%${search}%` } },
-            { subdivision: { [Op.iLike]: `%${search}%` } },
-          ],
-        }
-      : {};
+    const whereClause = {
+      deleted_at: null,
+      ...(search && {
+        [Op.or]: [
+          { formatted_address: { [Op.iLike]: `%${search}%` } },
+          { address_line1: { [Op.iLike]: `%${search}%` } },
+          { address_line2: { [Op.iLike]: `%${search}%` } },
+          { property_type: { [Op.iLike]: `%${search}%` } },
+          { city: { [Op.iLike]: `%${search}%` } },
+          { legal_description: { [Op.iLike]: `%${search}%` } },
+          { subdivision: { [Op.iLike]: `%${search}%` } },
+        ],
+      }),
+    };
+
+    const orderClause = [];
+    if (sort_by) {
+      orderClause.push([sort_by, order]);
+    }
 
     const { rows: properties, count: totalCount } =
       await Property.findAndCountAll({
         where: whereClause,
         limit: Number(limit),
         offset: Number(offset),
+        order: orderClause.length ? orderClause : [["createdAt", "ASC"]],
       });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -129,4 +142,69 @@ const addProperty = async (req, res) => {
   }
 };
 
-export { importProperties, getProperties, addProperty };
+// update
+const updateProperty = async (req, res) => {
+  try {
+    // console.log("request body:", req.body);
+
+    const { id } = req.params;
+    const form = propertySchema.partial().parse(req.body); // updates specific fields
+
+    const property = await Property.findByPk(id);
+    if (!property) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found",
+      });
+    }
+
+    await property.update(form);
+
+    return res.status(200).json({
+      success: true,
+      message: "Property updated successfully",
+      property,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return res.status(400).json({ success: false, errors: error.errors });
+
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+// delete
+const deleteProperty = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const property = await Property.findByPk(id);
+    if (!property) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found",
+      });
+    }
+
+    // soft delete
+    await property.update({ deleted_at: new Date() });
+
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+export {
+  importProperties,
+  getProperties,
+  addProperty,
+  updateProperty,
+  deleteProperty,
+};
