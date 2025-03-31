@@ -3,8 +3,9 @@ import "./config/database.js";
 import express from "express";
 import cors from "cors";
 import propertyRoutes from "./routes/property.routes.js";
+import sequelize from "./config/database.js";
 // import cron from "node-cron";
-// import importProperties from "./controllers/property.controller.js";
+// import { importProperties } from "./controllers/property.controller.js";
 
 const app = express();
 
@@ -34,5 +35,21 @@ app.use(`/${process.env.APP_VERSION}`, propertyRoutes);
 //   }
 // });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== "test") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+// app shutdown
+process.on("SIGINT", async () => {
+  try {
+    await sequelize.close();
+    console.log("Database connection closed");
+    process.exit(0);
+  } catch (error) {
+    console.error("Error closing database connection:", error);
+    process.exit(1);
+  }
+});
+
+export default app;
