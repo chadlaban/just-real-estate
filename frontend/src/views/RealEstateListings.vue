@@ -20,7 +20,9 @@ const fetchProperties = async (page = 1) => {
 
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_URL + import.meta.env.VITE_PORT}/api/properties`,
+      `${import.meta.env.VITE_URL + import.meta.env.VITE_PORT}/${
+        import.meta.env.VITE_VERSION
+      }/properties`,
       {
         params: { page, limit, search: searchQuery.value.trim() },
         signal,
