@@ -21,6 +21,7 @@ const Property = sequelize.define("Property", {
   legal_description: DataTypes.STRING,
   subdivision: DataTypes.STRING,
   last_sale_date: DataTypes.DATE,
+  created_by: DataTypes.STRING,
 });
 
 export default Property;
