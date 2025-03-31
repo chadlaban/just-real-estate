@@ -1,26 +1,26 @@
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 
-// console.log("DB_USER:", process.env.DB_USER);
-// console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-// console.log("DB_NAME:", process.env.DB_NAME);
-// console.log("DB_HOST:", process.env.DB_HOST);
+const NODE_ENV = process.env.NODE_ENV || "development";
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: "postgres",
-    logging: false,
-  }
-);
+const DB_NAME =
+  NODE_ENV === "test" ? process.env.TEST_DB_NAME : process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_HOST = process.env.DB_HOST;
+const DB_PORT =
+  NODE_ENV === "test" ? process.env.DB_TEST_PORT : process.env.DB_PORT;
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: "postgres",
+  logging: false,
+});
 
 sequelize
   .authenticate()
-  .then(() => console.log("Connected to PostgreSQL with Sequelize"))
-  .catch((err) => console.error("Unable to connect to database:", err));
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch((error) => console.error("Database connection error:", error));
 
 export default sequelize;
