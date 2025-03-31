@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.URL + process.env.CLIENT_PORT,
+    origin: `${process.env.URL}${process.env.CLIENT_PORT}`,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-app.use("/api", propertyRoutes);
+app.use(`/${process.env.APP_VERSION}`, propertyRoutes);
 
 // fetch and import data
 // cron.schedule("* * * * *", async () => {
