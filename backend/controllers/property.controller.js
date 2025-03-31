@@ -2,7 +2,9 @@ import fetch from "node-fetch";
 import sequelize from "../config/database.js";
 import { Op } from "sequelize";
 import "dotenv/config";
+import { z } from "zod";
 import { Property } from "../models/index.js";
+import { propertySchema } from "../schemas/property.js";
 
 const API_URL = "https://api.rentcast.io/v1/properties/random?limit=300";
 const API_KEY = process.env.API_KEY;
@@ -43,6 +45,7 @@ const importProperties = async (req, res) => {
             legal_description: data.legalDescription,
             subdivision: data.subdivision,
             last_sale_date: data.lastSaleDate,
+            created_by: "API",
           },
           { transaction }
         );
@@ -103,4 +106,27 @@ const getProperties = async (req, res) => {
   }
 };
 
-export { importProperties, getProperties };
+// create
+const addProperty = async (req, res) => {
+  try {
+    const form = propertySchema.parse(req.body);
+
+    // console.log(form);
+
+    await Property.create(form);
+
+    return res.status(201).json({
+      success: true,
+      message: "Property added successfully",
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return res.status(400).json({ success: false, errors: error.errors });
+
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+export { importProperties, getProperties, addProperty };
