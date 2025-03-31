@@ -22,6 +22,8 @@ const Property = sequelize.define("Property", {
   subdivision: DataTypes.STRING,
   last_sale_date: DataTypes.DATE,
   created_by: DataTypes.STRING,
+  deleted_at: DataTypes.DATE,
+  deleted_by: DataTypes.DATE,
 });
 
 export default Property;
