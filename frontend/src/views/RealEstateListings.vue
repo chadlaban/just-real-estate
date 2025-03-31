@@ -9,12 +9,12 @@ const properties = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const searchQuery = ref("");
-const limit = 10;
+const sortBy = ref("");
+const limit = ref(10);
 let abortController = null;
 
 const fetchProperties = async (page = 1) => {
   if (abortController) abortController.abort();
-
   abortController = new AbortController();
   const signal = abortController.signal;
 
@@ -24,7 +24,13 @@ const fetchProperties = async (page = 1) => {
         import.meta.env.VITE_VERSION
       }/properties`,
       {
-        params: { page, limit, search: searchQuery.value.trim() },
+        params: {
+          page,
+          limit: limit.value,
+          search: searchQuery.value.trim(),
+          sort_by: sortBy.value,
+          order: "DESC",
+        },
         signal,
       }
     );
@@ -58,14 +64,36 @@ onMounted(() => fetchProperties());
       <h1 class="text-3xl font-bold">Available Properties</h1>
     </div>
 
-    <!-- Search -->
-    <div class="mb-6 flex justify-center">
+    <!-- Filters -->
+    <div class="mb-6 flex justify-center gap-2">
+      <!-- search -->
       <input
         v-model="searchQuery"
         type="text"
         placeholder="Search by address..."
         class="border p-2 rounded w-full max-w-md"
       />
+      <!-- sort -->
+      <select
+        v-model="sortBy"
+        @change="fetchProperties(1)"
+        class="border p-2 rounded"
+      >
+        <option value="">Sort By</option>
+        <option value="createdAt">Real Estate</option>
+        <option value="last_sale_date">Last Sale Date</option>
+        <option value="property_type">Property Type</option>
+      </select>
+      <!-- limit -->
+      <select
+        v-model="limit"
+        @change="fetchProperties(1)"
+        class="border p-2 rounded"
+      >
+        <option value="10">Show 10</option>
+        <option value="25">Show 25</option>
+        <option value="50">Show 50</option>
+      </select>
     </div>
 
     <!-- Properties -->
