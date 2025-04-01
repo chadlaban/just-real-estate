@@ -27,7 +27,10 @@ const images = [image1, image2, image3, image4];
       class="flex flex-col md:flex-row gap-2 md:gap-6 w-full h-[500px] md:h-[600px]"
     >
       <!-- Sell Section -->
-      <div class="relative flex-1 h-full rounded-lg shadow-md overflow-hidden">
+      <router-link
+        to="/management"
+        class="relative flex-1 h-full rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-95"
+      >
         <img
           :src="sellImage"
           alt="Sell Properties"
@@ -41,10 +44,13 @@ const images = [image1, image2, image3, image4];
             <p class="mt-2">Experience and trust in real estate.</p>
           </div>
         </div>
-      </div>
+      </router-link>
 
       <!-- Buy Section -->
-      <div class="relative flex-1 h-full rounded-lg shadow-md overflow-hidden">
+      <router-link
+        to="/real-estate-listings"
+        class="relative flex-1 h-full rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-95"
+      >
         <img
           :src="buyImage"
           alt="Buy Properties"
@@ -58,7 +64,7 @@ const images = [image1, image2, image3, image4];
             <p class="mt-2">Explore the best properties available.</p>
           </div>
         </div>
-      </div>
+      </router-link>
     </section>
 
     <section class="text-center py-10">
