@@ -59,7 +59,7 @@ onMounted(() => fetchProperties());
 </script>
 
 <template>
-  <div class="container mx-auto p-5">
+  <div class="mx-auto p-5">
     <div class="text-center py-10">
       <h1 class="text-3xl font-bold">Available Properties</h1>
     </div>
@@ -70,7 +70,7 @@ onMounted(() => fetchProperties());
       <input
         v-model="searchQuery"
         type="text"
-        placeholder="Search by address..."
+        placeholder="Search real estate..."
         class="border p-2 rounded w-full max-w-md"
       />
       <!-- sort -->
@@ -81,8 +81,9 @@ onMounted(() => fetchProperties());
       >
         <option value="">Sort By</option>
         <option value="createdAt">Real Estate</option>
-        <option value="last_sale_date">Last Sale Date</option>
         <option value="property_type">Property Type</option>
+        <option value="lot_size">Lot Size</option>
+        <option value="year_built">Year Built</option>
       </select>
       <!-- limit -->
       <select
@@ -101,48 +102,46 @@ onMounted(() => fetchProperties());
       v-if="properties.length"
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
     >
-      <div
+      <router-link
         v-for="property in properties"
+        :to="{ name: 'property-details', params: { id: property.id } }"
         :key="property.id"
-        class="border rounded-lg shadow-lg bg-white"
+        target="_blank"
+        class="border rounded-lg shadow-lg bg-white transition-transform transform hover:scale-105"
       >
         <img
           :src="staticImg"
           alt="Property Image"
           class="w-full h-50 object-cover rounded-t-md"
         />
-        <section
-          class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-x-4 text-sm text-gray-700"
-        >
-          <div>
-            <p><strong>Address:</strong> {{ property.formatted_address }}</p>
-            <p>
-              <strong>City:</strong> {{ property.city }}, {{ property.state }}
-              {{ property.zip_code }}
-            </p>
-            <!-- <p><strong>County:</strong> {{ property.county || "N/A" }}</p>
-            <p><strong>Latitude:</strong> {{ property.latitude }}</p>
-            <p><strong>Longitude:</strong> {{ property.longitude }}</p> -->
-          </div>
-          <div>
+        <section class="p-4 text-sm text-gray-700">
+          <p class="text-lg font-semibold mb-2">{{ property.property_type }}</p>
+
+          <div class="grid grid-cols-4 gap-2 items-center">
             <p v-if="property.bedrooms">
-              <strong>Bedrooms:</strong> {{ property.bedrooms }}
+              <strong>{{ property.bedrooms }}</strong> Bed
             </p>
             <p v-if="property.bathrooms">
-              <strong>Bathrooms:</strong> {{ property.bathrooms }}
+              <strong>{{ property.bathrooms }}</strong> Bath
             </p>
             <p v-if="property.square_footage">
-              <strong>Size:</strong> {{ property.square_footage }} sq ft
+              <strong>{{ property.square_footage }}</strong> sq ft
             </p>
             <p v-if="property.lot_size">
-              <strong>Lot Size:</strong> {{ property.lot_size }}
-            </p>
-            <p v-if="property.year_built">
-              <strong>Year Built:</strong> {{ property.year_built || "N/A" }}
+              <strong>{{ property.lot_size }}</strong> Lot Size
             </p>
           </div>
+
+          <div class="flex justify-between items-center mt-3 gap-2">
+            <p class="text-gray-800">{{ property.formatted_address }}</p>
+            <button
+              class="bg-gray-500 text-white px-2 py-1 rounded-lg shadow hover:bg-gray-600 cursor-pointer transition-transform transform hover:scale-105"
+            >
+              Contact
+            </button>
+          </div>
         </section>
-      </div>
+      </router-link>
     </div>
 
     <p v-else class="text-center">Loading properties...</p>
