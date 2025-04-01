@@ -41,6 +41,6 @@ const User = sequelize.define(
   }
 );
 
-// User.hasMany(Properties, { foreignKey: "userId" });
+// User.hasMany(Properties, { foreignKey: "user_id" });
 
 export default User;

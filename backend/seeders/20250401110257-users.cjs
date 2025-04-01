@@ -1,5 +1,6 @@
 const users = [
   {
+    id: 1,
     username: "chad",
     email: "chad@justrealestate.com",
     password: "hashed_password_1",
@@ -7,6 +8,7 @@ const users = [
     updatedAt: new Date(),
   },
   {
+    id: 2,
     username: "user",
     email: "user@justrealestate.com",
     password: "hashed_password_2",

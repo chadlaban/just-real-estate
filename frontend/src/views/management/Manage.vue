@@ -164,6 +164,7 @@ const editProperty = (property) => {
 
   const {
     id,
+    user_id,
     created_by,
     deleted_at,
     deleted_by,

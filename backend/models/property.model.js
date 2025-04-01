@@ -9,7 +9,7 @@ const Properties = sequelize.define("Properties", {
     autoIncrement: true,
     primaryKey: true,
   },
-  userId: {
+  user_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -119,6 +119,6 @@ const Properties = sequelize.define("Properties", {
   },
 });
 
-Properties.belongsTo(User, { foreignKey: "userId" });
+Properties.belongsTo(User, { foreignKey: "user_id" });
 
 export default Properties;

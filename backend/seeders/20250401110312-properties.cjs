@@ -76,7 +76,7 @@ module.exports = {
             deleted_by: normalizeNull(row.deleted_by),
             createdAt: new Date(),
             updatedAt: new Date(),
-            userId: 1,
+            user_id: 1,
           });
         })
         .on("end", resolve)
