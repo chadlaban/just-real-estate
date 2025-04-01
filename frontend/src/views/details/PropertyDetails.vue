@@ -55,7 +55,7 @@ onMounted(() => fetchPropertyDetails());
         </div>
 
         <!-- Right Column -->
-        <div class="lg:w-1/3 bg-white p-4 rounded-lg shadow-md">
+        <div class="lg:w-1/3 bg-[#f7f7f7] p-4 rounded-lg shadow-md">
           <section>
             <h2 class="text-xl font-semibold mb-2">Property Information</h2>
             <table class="w-full text-sm text-gray-700 mb-2">
@@ -115,7 +115,7 @@ onMounted(() => fetchPropertyDetails());
               </tbody>
             </table>
             <button
-              class="bg-gray-500 w-full text-white px-2 py-1 rounded-lg shadow hover:bg-gray-600 cursor-pointer transition-transform transform hover:scale-95"
+              class="bg-gray-500 w-full text-[#f7f7f7] px-2 py-1 rounded-lg shadow hover:bg-gray-600 cursor-pointer transition-transform transform hover:scale-95"
             >
               Email Agent
             </button>

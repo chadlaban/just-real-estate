@@ -37,7 +37,7 @@ const images = [image1, image2, image3, image4];
           class="absolute inset-0 w-full h-full object-cover"
         />
         <div
-          class="absolute inset-0 flex items-center justify-center bg-black/[.5] text-white text-center p-6"
+          class="absolute inset-0 flex items-center justify-center bg-black/[.5] text-[#f7f7f7] text-center p-6"
         >
           <div>
             <h2 class="text-2xl font-semibold">Sell a Property?</h2>
@@ -57,7 +57,7 @@ const images = [image1, image2, image3, image4];
           class="absolute inset-0 w-full h-full object-cover"
         />
         <div
-          class="absolute inset-0 flex items-center justify-center bg-black/[.5] text-white text-center p-6"
+          class="absolute inset-0 flex items-center justify-center bg-black/[.5] text-[#f7f7f7] text-center p-6"
         >
           <div>
             <h2 class="text-2xl font-semibold">Buy a Home?</h2>

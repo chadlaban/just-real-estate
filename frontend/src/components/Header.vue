@@ -11,7 +11,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <header class="bg-white shadow-md py-4 sticky z-1">
+  <header class="bg-[#f7f7f7] shadow-md py-4 sticky z-1">
     <div class="container mx-auto flex justify-between items-center px-4">
       <h1 class="text-2xl font-bold text-gray-800">
         <router-link to="/" class="text-gray-600 hover:text-gray-900"
@@ -43,7 +43,7 @@ const toggleMenu = () => {
       <!-- Navigation Menu -->
       <nav
         :class="isMenuOpen ? 'block' : 'hidden'"
-        class="fixed top-0 right-0 h-full w-2/3 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:relative md:top-auto md:right-auto md:w-auto md:bg-transparent md:shadow-none md:transform-none md:flex md:space-x-4 p-4 md:p-0"
+        class="fixed top-0 right-0 h-full w-2/3 bg-[#f7f7f7] shadow-lg transform transition-transform duration-300 ease-in-out md:relative md:top-auto md:right-auto md:w-auto md:bg-transparent md:shadow-none md:transform-none md:flex md:space-x-4 p-4 md:p-0"
       >
         <!-- Links -->
         <ul

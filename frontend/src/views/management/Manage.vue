@@ -208,7 +208,7 @@ onMounted(fetchPropertiesData);
 </script>
 
 <template>
-  <div class="max-w-full m-10 p-6 bg-white shadow-lg rounded-lg">
+  <div class="max-w-full m-10 p-6 bg-[#f7f7f7] shadow-lg rounded-lg">
     <h2 class="text-2xl font-semibold mb-4 text-center">Manage Properties</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -245,7 +245,7 @@ onMounted(fetchPropertiesData);
           <button
             @click="openModal"
             type="submit"
-            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition duration-200"
+            class="w-full bg-green-600 hover:bg-green-700 text-[#f7f7f7] font-bold py-2 px-4 rounded-md transition duration-200"
           >
             {{ isEditing ? "Update Real Estate" : "Add Real Estate" }}
           </button>
@@ -261,7 +261,7 @@ onMounted(fetchPropertiesData);
             v-if="isEditing"
             type="button"
             @click="resetForm"
-            class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md transition duration-200 mt-2"
+            class="w-full bg-gray-500 hover:bg-gray-600 text-[#f7f7f7] font-bold py-2 px-4 rounded-md transition duration-200 mt-2"
           >
             Cancel
           </button>
@@ -296,7 +296,7 @@ onMounted(fetchPropertiesData);
           <li
             v-for="(property, index) in properties"
             :key="index"
-            class="bg-white p-3 shadow rounded-md flex justify-between items-center"
+            class="bg-[#f7f7f7] p-3 shadow rounded-md flex justify-between items-center"
           >
             <div>
               <p class="font-semibold">{{ property.formatted_address }}</p>
@@ -308,13 +308,13 @@ onMounted(fetchPropertiesData);
             <div class="flex space-x-2">
               <button
                 @click="editProperty(property)"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                class="bg-blue-500 hover:bg-blue-600 text-[#f7f7f7] px-3 py-1 rounded"
               >
                 Edit
               </button>
               <button
                 @click="deletePropertyHandler(property.id)"
-                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                class="bg-red-500 hover:bg-red-600 text-[#f7f7f7] px-3 py-1 rounded"
               >
                 Delete
               </button>

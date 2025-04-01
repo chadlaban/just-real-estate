@@ -100,14 +100,14 @@ onMounted(() => fetchProperties());
     <!-- Properties -->
     <div
       v-if="properties.length"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 my-6"
     >
       <router-link
         v-for="property in properties"
         :to="{ name: 'property-details', params: { id: property.id } }"
         :key="property.id"
         target="_blank"
-        class="border rounded-lg shadow-lg bg-white transition-transform transform hover:scale-105"
+        class="border rounded-lg shadow-lg bg-[#f7f7f7] transition-transform transform hover:scale-105"
       >
         <img
           :src="staticImg"
@@ -135,7 +135,7 @@ onMounted(() => fetchProperties());
           <div class="flex justify-between items-center mt-3 gap-2">
             <p class="text-gray-800">{{ property.formatted_address }}</p>
             <button
-              class="bg-gray-500 text-white px-2 py-1 rounded-lg shadow hover:bg-gray-600 cursor-pointer transition-transform transform hover:scale-105"
+              class="bg-gray-500 text-[#f7f7f7] px-2 py-1 rounded-lg shadow hover:bg-gray-600 cursor-pointer transition-transform transform hover:scale-105"
             >
               Contact
             </button>
