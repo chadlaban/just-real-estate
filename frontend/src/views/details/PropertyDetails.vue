@@ -42,8 +42,9 @@ onMounted(() => fetchPropertyDetails());
       <div class="flex flex-col lg:flex-row gap-4">
         <!-- Left Column -->
         <div class="lg:w-2/3 flex flex-col gap-4">
-          <Carousel :images="images" />
+          <Carousel class="rounded-lg" :images="images" />
           <div>
+            <!-- Google Map -->
             <iframe
               v-if="propertyDetails.latitude && propertyDetails.longitude"
               :src="`https://www.google.com/maps?q=${propertyDetails.latitude},${propertyDetails.longitude}&output=embed`"
