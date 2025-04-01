@@ -8,6 +8,7 @@ import {
   updateProperty,
   deleteProperty,
 } from "@/services/propertyService.js";
+import ConfirmationModal from "@/components/ui/ConfirmationModal.vue";
 
 const form = ref({
   formatted_address: "",
@@ -38,6 +39,7 @@ const currentPage = ref(1);
 const searchQuery = ref("");
 const sortBy = ref("");
 const limit = ref(10);
+const showModal = ref(false);
 const isEditing = ref(false);
 const propertyId = ref();
 
@@ -77,6 +79,7 @@ const validateForm = () => {
 
   const rules = [
     { field: "formatted_address", message: "Formatted address is required." },
+    { field: "address_line1", message: "Address is required." },
     { field: "city", message: "City is required." },
     { field: "state", message: "State is required." },
     {
@@ -120,13 +123,10 @@ const submitForm = async () => {
       await updateProperty(propertyId.value, form.value);
       isEditing.value = false;
       propertyId.value = null;
-      alert("Property updated successfully!");
     } else {
       await addProperty(form.value);
-      alert("Property added successfully!");
     }
 
-    resetForm();
     fetchPropertiesData();
   } catch (error) {
     alert("Failed to add property. Check your inputs.");
@@ -192,6 +192,18 @@ const deletePropertyHandler = async (id) => {
   }
 };
 
+// modal
+const openModal = () => {
+  if (!validateForm()) return;
+  showModal.value = true;
+};
+
+const handleConfirm = () => {
+  showModal.value = false;
+  submitForm();
+  resetForm();
+};
+
 onMounted(fetchPropertiesData);
 </script>
 
@@ -218,7 +230,12 @@ onMounted(fetchPropertiesData);
               :step="
                 ['latitude', 'longitude'].includes(key) ? 'any' : undefined
               "
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              :class="[
+                'mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none sm:text-sm',
+                errors[key]
+                  ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                  : 'border-gray-300 focus:ring-green-500 focus:border-green-500',
+              ]"
             />
             <p v-if="errors[key]" class="text-red-500 text-sm mt-1">
               {{ errors[key] }}
@@ -226,11 +243,19 @@ onMounted(fetchPropertiesData);
           </div>
           <!-- Submit/Cancel Button -->
           <button
+            @click="openModal"
             type="submit"
             class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md transition duration-200"
           >
-            {{ isEditing ? "Update Property" : "Add Property" }}
+            {{ isEditing ? "Update Real Estate" : "Add Real Estate" }}
           </button>
+
+          <ConfirmationModal
+            :show="showModal"
+            :message="'This real estate record will now be saved, proceed?'"
+            @confirm="handleConfirm"
+            @cancel="showModal = false"
+          />
 
           <button
             v-if="isEditing"
