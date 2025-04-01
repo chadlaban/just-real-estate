@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Property } from "../models/index.js";
 import { propertySchema } from "../schemas/property.js";
 
-const API_URL = "https://api.rentcast.io/v1/properties/random?limit=300";
+const API_URL = "https://api.rentcast.io/v1/properties/random?limit=600";
 const API_KEY = process.env.API_KEY;
 
 const importProperties = async (req, res) => {
@@ -59,7 +59,9 @@ const importProperties = async (req, res) => {
       }
     }
 
-    res.status(200).json({ message: "Properties imported successfully!" });
+    return res
+      .status(200)
+      .json({ message: "Properties imported successfully!" });
   } catch (error) {
     console.error("Error importing properties:", error);
     res.status(500).json({ error: "Failed to import properties" });
@@ -73,12 +75,18 @@ const getProperties = async (req, res) => {
       limit = 10,
       search = "",
       sort_by,
-      order = "ASC",
+      order = "DESC",
     } = req.query;
     const offset = (page - 1) * limit;
 
     const whereClause = {
       deleted_at: null,
+      // for better data representation on frontend
+      property_type: { [Op.ne]: null },
+      bedrooms: { [Op.ne]: null },
+      bathrooms: { [Op.ne]: null },
+      square_footage: { [Op.ne]: null },
+      lot_size: { [Op.ne]: null },
       ...(search && {
         [Op.or]: [
           { formatted_address: { [Op.iLike]: `%${search}%` } },
@@ -116,6 +124,33 @@ const getProperties = async (req, res) => {
   } catch (error) {
     console.error("Error fetching properties:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getPropertyDetails = async (req, res) => {
+  try {
+    // console.log(req.params.id);
+    const property = await Property.findByPk(req.params.id);
+    // console.log(property);
+    if (!property)
+      return res.status(404).json({ message: "Property not found" });
+
+    // similar properties by number of bedrooms
+    const similarProperties = await Property.findAll({
+      where: {
+        bedrooms: property.bedrooms,
+        id: { [Op.ne]: property.id },
+      },
+      limit: 8,
+      order: [["createdAt", "DESC"]],
+    });
+
+    return res.status(200).json({
+      property,
+      similarProperties,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -204,6 +239,7 @@ const deleteProperty = async (req, res) => {
 export {
   importProperties,
   getProperties,
+  getPropertyDetails,
   addProperty,
   updateProperty,
   deleteProperty,
