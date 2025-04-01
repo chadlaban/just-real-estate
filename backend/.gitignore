@@ -1,4 +1,6 @@
 .env
+config/config.json
+seeders/Properties.csv
 
 # Logs
 logs
